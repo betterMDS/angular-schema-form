@@ -184,7 +184,7 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
       }
     };
 
-    var build = function(items, decorator, templateFn, slots, path, state, lookup) {
+    var build = function(items, schema, decorator, templateFn, slots, path, state, lookup, model) {
       state = state || {};
       lookup = lookup || Object.create(null);
       path = path || 'schemaForm.form';
@@ -226,6 +226,10 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
           while (div.childNodes.length > 0) {
             tmpl.appendChild(div.childNodes[0]);
           }
+		  var curRequired =  schema.required ? angular.copy(schema.required) : [],
+		  	  curKey = f.key ? angular.copy(f.key).join('.') : '';
+
+			  f.required = curRequired && curKey && curRequired.indexOf( curKey ) > -1;
 
           // Possible builder, often a noop
           var args = {
@@ -234,10 +238,12 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
             lookup: lookup,
             state: state,
             path: path + '[' + index + ']',
+			model: model,
+
 
             // Recursive build fn
             build: function(items, path, state) {
-              return build(items, decorator, templateFn, slots, path, state, lookup);
+              return build(items, schema, decorator, templateFn, slots, path, state, lookup, model);
             },
 
           };
@@ -265,13 +271,13 @@ angular.module('schemaForm').provider('sfBuilder', ['sfPathProvider', function(s
       /**
        * Builds a form from a canonical form definition
        */
-      build: function(form, decorator, slots, lookup) {
-        return build(form, decorator, function(form, field) {
+      build: function(form, schema, decorator, slots, lookup, model) {
+        return build(form, schema, decorator, function(form, field) {
           if (form.type === 'template') {
             return form.template;
           }
           return $templateCache.get(field.template);
-        }, slots, undefined, undefined, lookup);
+        }, slots, undefined, undefined, lookup, model);
 
       },
       builder: builders,

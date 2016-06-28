@@ -17,7 +17,8 @@ angular.module('schemaForm')
       },
       controller: ['$scope', function($scope) {
         this.evalInParentScope = function(expr, locals) {
-          return $scope.$parent.$eval(expr, locals);
+			var result = $scope.$parent.$eval(expr, locals);
+          return result;
         };
 
         // Set up form lookup map
@@ -117,7 +118,7 @@ angular.module('schemaForm')
           // Use the builder to build it and append the result
           var lookup = Object.create(null);
           scope.lookup(lookup); // give the new lookup to the controller.
-          element[0].appendChild(sfBuilder.build(merged, decorator, slots, lookup));
+          element[0].appendChild(sfBuilder.build(merged, schema, decorator, slots, lookup, scope.model));
 
           // We need to know if we're in the first digest looping
           // I.e. just rendered the form so we know not to validate

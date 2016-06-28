@@ -68,12 +68,14 @@ angular.module('schemaForm').directive('sfField',
              * @return {Any} the result of the expression
              */
             scope.evalExpr = function(expression, locals) {
+				var result;
               if (sfSchema) {
                 //evaluating in scope outside of sfSchemas isolated scope
-                return sfSchema.evalInParentScope(expression, locals);
+				result = sfSchema.evalInParentScope(expression, locals);
+                return result;
               }
-
-              return scope.$eval(expression, locals);
+			  result = scope.$eval(expression, locals);
+              return result;
             };
 
             /**
