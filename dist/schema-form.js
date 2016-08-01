@@ -2007,16 +2007,13 @@ angular.module('schemaForm').directive('sfField',
              * @return {Any} the result of the expression
              */
             scope.evalExpr = function(expression, locals) {
-				console.log( expression, scope, this );
 				var result;
               if (sfSchema) {
                 //evaluating in scope outside of sfSchemas isolated scope
 				result = sfSchema.evalInParentScope(expression, locals);
-				console.log( result );
                 return result;
               }
 			  result = scope.$eval(expression, locals);
-			  console.log( result );
               return result;
             };
 
@@ -2556,7 +2553,6 @@ angular.module('schemaForm')
       controller: ['$scope', function($scope) {
         this.evalInParentScope = function(expr, locals) {
 			var result = $scope.$parent.$eval(expr, locals);
-			console.log(" IN PARENT", expr, $scope,  result);
           return result;
         };
 
@@ -2640,7 +2636,6 @@ angular.module('schemaForm')
 
           //make the form available to decorators
           childScope.schemaForm  = {form:  merged, schema: schema};
-		  console.log( 'SchemaForm', childScope.schemaForm );
 
           //clean all but pre existing html.
           element.children(':not(.schema-form-ignore)').remove();
