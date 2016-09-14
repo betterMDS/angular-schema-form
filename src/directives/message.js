@@ -1,6 +1,6 @@
 import angular from 'angular';
 
-export default function($injector, sfErrorMessage) {
+export default function($injector, $timeout, sfErrorMessage) {
 
   //Inject sanitizer if it exists
   var $sanitize = $injector.has('$sanitize') ?
@@ -25,9 +25,13 @@ export default function($injector, sfErrorMessage) {
       // Only call html() if needed.
       var setMessage = function(msg) {
         if (msg !== currentMessage) {
-          element.html(msg);
-          currentMessage = msg;
+            element.html(msg);
+            currentMessage = msg;
         }
+      };
+
+      var updateAsync = function( checkForErrors ) {
+          $timeout( function() { update(checkForErrors); } );
       };
 
       var update = function(checkForErrors) {
@@ -79,8 +83,8 @@ export default function($injector, sfErrorMessage) {
           // This is since both the error message can change and given a pristine
           // option to not show errors the ngModel.$error might not have changed
           // but we're not pristine any more so we should change!
-          ngModel.$parsers.push(function(val) { update(true); return val; });
-          ngModel.$formatters.push(function(val) { update(true); return val; });
+          ngModel.$parsers.push(function(val) { updateAsync(true); return val; });
+          ngModel.$formatters.push(function(val) { updateAsync(true); return val; });
           once();
         }
       });
