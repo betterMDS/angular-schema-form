@@ -36,6 +36,22 @@ angular.module('schemaForm').factory('sfValidator', [function() {
       value = undefined;
     }
 
+    // Object fields (material - autocomplete ) will give a null value when we're looking for an object or undefined
+    if (schema.type === 'object' && value === null) {
+       value = undefined;
+    }
+
+    // Date values
+    if ( schema.type === 'string' && schema.format === 'date' ) {
+        if ( value === null ) {
+            value = undefined;
+        } else {
+            if ( typeof value.toISOString === 'function' ) {
+                value = value.toISOString();
+            }
+        }
+    }
+
     // Version 4 of JSON Schema has the required property not on the
     // property itself but on the wrapping object. Since we like to test
     // only this property we wrap it in a fake object.
@@ -47,9 +63,12 @@ angular.module('schemaForm').factory('sfValidator', [function() {
       wrap.required = [propName];
     }
     var valueWrap = {};
+
+
+
     if (angular.isDefined(value)) {
       valueWrap[propName] = value;
-    }
+  }
     return tv4.validateResult(valueWrap, wrap);
 
   };

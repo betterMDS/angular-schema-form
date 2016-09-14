@@ -30,7 +30,6 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', '$parse
         // Validate against the schema.
 
         var validate = function(viewValue) {
-          //console.log('validate called', viewValue)
           //Still might be undefined
           if (!form) {
             return viewValue;
@@ -107,8 +106,8 @@ angular.module('schemaForm').directive('schemaValidate', ['sfValidator', '$parse
 
         // A bit ugly but useful.
         scope.validateField =  function(formName) {
-          
-          // If we have specified a form name, and this model is not within 
+
+          // If we have specified a form name, and this model is not within
           // that form, then leave things be.
           if(formName != undefined && ngModel.$$parentForm.$name !== formName) {
             return;

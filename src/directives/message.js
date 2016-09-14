@@ -1,5 +1,5 @@
 angular.module('schemaForm').directive('sfMessage',
-['$injector', 'sfErrorMessage', function($injector, sfErrorMessage) {
+['$injector', '$timeout', 'sfErrorMessage', function($injector, $timeout, sfErrorMessage) {
 
   //Inject sanitizer if it exists
   var $sanitize = $injector.has('$sanitize') ?
@@ -24,9 +24,13 @@ angular.module('schemaForm').directive('sfMessage',
       // Only call html() if needed.
       var setMessage = function(msg) {
         if (msg !== currentMessage) {
-          element.html(msg);
-          currentMessage = msg;
+            element.html(msg);
+            currentMessage = msg;
         }
+      };
+
+      var updateAsync = function( checkForErrors ) {
+          $timeout( function() { update(checkForErrors); } );
       };
 
       var update = function(checkForErrors) {
@@ -78,8 +82,8 @@ angular.module('schemaForm').directive('sfMessage',
           // This is since both the error message can change and given a pristine
           // option to not show errors the ngModel.$error might not have changed
           // but we're not pristine any more so we should change!
-          ngModel.$parsers.push(function(val) { update(true); return val; });
-          ngModel.$formatters.push(function(val) { update(true); return val; });
+          ngModel.$parsers.push(function(val) { updateAsync(true); return val; });
+          ngModel.$formatters.push(function(val) { updateAsync(true); return val; });
           once();
         }
       });

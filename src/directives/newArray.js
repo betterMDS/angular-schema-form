@@ -58,6 +58,11 @@ function(sel, sfPath, schemaForm) {
         // Special case: don't do it if form has a titleMap
         if (!form.titleMap && form.startEmpty !== true && (!scope.modelArray || scope.modelArray.length === 0)) {
           scope.appendToArray();
+          if ( form.startAtMin === true ) {
+              while ( scope.modelArray.length < form.schema.minItems ) {
+                  scope.appendToArray();
+              }
+          }
         }
 
         // If we have "uniqueItems" set to true, we must deep watch for changes.
