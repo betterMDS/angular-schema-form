@@ -26,7 +26,8 @@
   "dependencies": {
     "angular": ">= 1.2",
     "tv4": "~1.0.15",
-    "angular-sanitize": ">= 1.2"
+    "angular-sanitize": ">= 1.2",
+    "objectpath": "~1.1.0"
   },
   "keywords": [
     "angular",
