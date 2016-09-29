@@ -1,10 +1,11 @@
 import angular from 'angular';
 
-export default function($injector, $timeout, sfErrorMessage) {
+export default function($injector,sfErrorMessage) {
 
   //Inject sanitizer if it exists
   var $sanitize = $injector.has('$sanitize') ?
                   $injector.get('$sanitize') : function(html) { return html; };
+  var $timeout = $injector.get('$timeout');
 
   return {
     scope: false,
