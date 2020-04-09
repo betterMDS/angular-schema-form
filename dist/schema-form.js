@@ -2078,7 +2078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (value === null) {
 	        value = undefined;
 	      } else {
-	        if (typeof value.toISOString === 'function') {
+		  	if ( value && value.toISOString && typeof value.toISOString === 'function' ) {
 	          value = value.toISOString();
 	        }
 	      }
